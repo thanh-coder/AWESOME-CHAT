@@ -1,0 +1,11 @@
+{
+  "name": "awesome-chat",
+  "version": "1.0.0",
+  "description": "app-chat",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "manhhung",
+  "license": "ISC"
+}
