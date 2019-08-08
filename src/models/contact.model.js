@@ -8,4 +8,13 @@ let ContactSchema = new Schema({
     updatedAt: {type:Number, default: null},
     deletedAt: {type:Number, default: null},
 });
+
+ContactSchema.createNew = (item) => {
+    return this.create(item);
+}
+ContactSchema.statics = {
+    createNew:(item)=>{
+        return this.create(item);
+    }
+}
 module.exports = mongoose.model("contact",ContactSchema);
