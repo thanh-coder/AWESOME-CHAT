@@ -2,7 +2,8 @@ import express from 'express';
 import ConnectDB from './config/connectDB';
 import ContactModel from './models/contact.model'
 import config from 'dotenv';
-import configViewEngine from './config/viewEngine'
+import configViewEngine from './config/viewEngine';
+import initRoutes from './routes/web'
 
 let app = express();
 config.config();
@@ -10,12 +11,8 @@ config.config();
 ConnectDB();
 configViewEngine(app);
 
-app.get('/',  async (req, res) => {
-  return res.render("main/master")
-});
-app.get('/login',  async (req, res) => {
-  return res.render("auth/loginRegister")
-});
+initRoutes(app);
+
 console.log(process.env.APP_PORT)
 let server = app.listen(process.env.APP_PORT,process.env.APP_HOST, function () {
   
