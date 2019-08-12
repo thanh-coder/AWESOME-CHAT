@@ -1,6 +1,9 @@
 import {validationResult} from "express-validator/check"
 let getLoginResgiter = (req, res) => {
-    return res.render('auth/master');
+    return res.render('auth/master',{
+        errors: req.flash("errors"),
+        success: req.flash("success")
+    });
 }
 let postRegister = (req, res) => {
   let errorArr = [];

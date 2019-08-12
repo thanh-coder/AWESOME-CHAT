@@ -4,7 +4,10 @@ import ContactModel from './models/contact.model'
 import config from 'dotenv';
 import configViewEngine from './config/viewEngine';
 import initRoutes from './routes/web';
+import configSession from "./config/session";
 import bodyParser from 'body-parser';
+import flash from 'connect-flash';
+
 
 let app = express();
 config.config();
@@ -15,6 +18,8 @@ app.use(bodyParser.urlencoded({ extended: false }))
 
 // parse application/json
 app.use(bodyParser.json());
+app.use(flash());
+configSession(app);
 initRoutes(app);
 
 console.log(process.env.APP_PORT)
