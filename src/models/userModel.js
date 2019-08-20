@@ -27,4 +27,12 @@ let UserSchema = new Schema({
     updatedAt: {type:Number, default: null},
     deletedAt: {type:Number, default: null},
 });
+UserSchema.methods.createNew = (item) => {
+     return this.create(item)
+}
+UserSchema.methods.findByEmail = (email) => {
+    if(this != undefined){
+        return this.findOne({"local.email":email}).exec(); 
+    }
+}
 module.exports = mongoose.model("user",UserSchema);
