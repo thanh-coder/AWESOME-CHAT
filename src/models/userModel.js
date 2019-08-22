@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import bcrypt from 'bcrypt';
 let Schema = mongoose.Schema;
 let UserSchema = new Schema({
     username: String,
@@ -27,12 +28,36 @@ let UserSchema = new Schema({
     updatedAt: {type:Number, default: null},
     deletedAt: {type:Number, default: null},
 });
-UserSchema.methods.createNew = (item) => {
-     return this.create(item)
+
+UserSchema.statics = {
+    findByEmail: function(email) {
+            return this.findOne({"local.email":email}).exec(); 
+    },
+    createNew: function(item){
+        return this.create(item)
+   },
+   removeById: function(id){
+    return this.findByIdAndRemove(id).exec();
+   },
+   verifyToken: function(token){
+    return this.findOneAndUpdate({"local.verifyToken":token},
+    {"local.isActive":true,"local.verifyToken":null}).exec();
+   },
+   findUserById: function(id){
+       return this.findById(id).exec();
+   },
+   findByFaceBookUid: function(uid){
+       return this.findOne({"facebook.uid":uid}).exec();
+   },
+   findByGoogleUid: function(uid){
+    return this.findOne({"google.uid":uid}).exec();
 }
-UserSchema.methods.findByEmail = (email) => {
-    if(this != undefined){
-        return this.findOne({"local.email":email}).exec(); 
+}
+
+UserSchema.methods = {
+    comparePassword: function(password){
+        return bcrypt.compare(password,this.local.password);
     }
 }
+
 module.exports = mongoose.model("user",UserSchema);

@@ -1,17 +1,18 @@
 import bcrypt from 'bcrypt';
 import uuidv4 from 'uuid/v4';
-import { transErrors, tranSucces } from '../lang/vi';
+import { transErrors, tranSucces, transMail } from '../lang/vi';
 import UserModel from '../models/userModel';
+import sendEmail from "../config/mailer"
 let saltRounds = 7;
 
 
-let register = async (email,gender,password) => {
+let register = async (email,gender,password,protocol,host) => {
     return new Promise(async (resolve,reject) => {
         let userModel = new UserModel();
         try{
-        let userByEmail = await userModel.findByEmail(email);
+        let userByEmail = await UserModel.findByEmail(email);
+        // let userByEmail = await UserModel.findOne({"local.email":email})
 
-        console.log("userByEmail:"+ userByEmail)
         if(userByEmail){
             if(userByEmail.deletedAt != null){
                return new reject(transErrors.account_removed)
@@ -32,9 +33,23 @@ let register = async (email,gender,password) => {
             }
     
         }
-        let user = await UserModel.create(userItem);
-        console.log("item:"+user);
+        let user = await UserModel.createNew(userItem);
         resolve(tranSucces.userCreated(user.local.email));
+
+        let linkVerify = `${protocol}://${host}/verify/${user.local.verifyToken}`
+        // sendEmail(email,transMail.subject,transMail.template(linkVerify))
+        //     .then(success =>{
+        //         console.log(success)
+        //         resolve(tranSucces.userCreated(user.local.email));
+        //     })
+        //     .catch(async err => {
+        //         if(await UserModel.find({_id:user._id})){
+        //             // await UserModel.removeById(user._id)
+        //             await UserModel.findByIdAndRemove(user._id,{useFindAndModify: false}).exec();
+        //         }
+        //         console.log("loi:"+err);
+        //         reject(transMail.send_failed);
+        //     })
     } 
     catch(err){
        console.log(err)
@@ -42,7 +57,15 @@ let register = async (email,gender,password) => {
     })
    
 }
+
+let verifyAccount = (token) => {
+    return new Promise(async (resolve,reject) => {
+       await UserModel.verifyToken(token)      
+        resolve(tranSucces.account_actived)
+    })
+}
 module.exports = {
-  register:register
+  register:register,
+  verifyAccount
   
 }
