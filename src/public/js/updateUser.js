@@ -5,7 +5,7 @@ function updateUserInfo(){
     $('#input-change-avatar').bind("change",function(){
         let fileData = $(this).prop("files")[0];
         let math = ["image/png","image/jpg","image/jpeg"];
-        let limit = 1048576;
+        let limit = 10485766;
 
         if($.inArray(fileData.type,math)===-1){
             alertify.notify("type file invalid","error",7);
@@ -45,6 +45,7 @@ function updateUserInfo(){
     })
     $('#input-change-gender-male').bind("click",function(){
         userInfor.gender = $(this).val();
+        console.log(this);
     })
     $('#input-change-gender-female').bind("click",function(){
         userInfor.gender = $(this).val();
@@ -60,13 +61,14 @@ function updateUserInfo(){
 $(document).ready(function(){
  updateUserInfo();
  originAvatarSrc = $("#user-modal-avatar").attr("src");
- console.log(userAvatar);
  $("#input-btn-update-user").bind("click",function(){
-     console.log(Object.keys(userInfor));
-     if(Object.keys(userInfor) < 1 && !userAvatar){
-        alertify.notify("you have to change data before save","error",7);
-        return false;
+     if(userInfor!=null || userInfor != undefined){
+        if(Object.keys(userInfor) < 1 && !userAvatar){
+            alertify.notify("you have to change data before save","error",7);
+            return false;
+         }
      }
+  
  $.ajax({
      url: "/user/update-avatar",
      type: "put",
@@ -74,19 +76,27 @@ $(document).ready(function(){
      processData: false,
      contentType: false,
      data: userAvatar,
-     success: function(){
+     success: function(result){
+        $('.user-modal-alert-success').find('span').text(result.message)
+        $('.user-modal-alert-success').css("display","block")
+        $("#navbar-avatar").attr("src",result.imageSrc);
+        originAvatarSrc = result.imageSrc;
+        $("#input-btn-cancel-user").trigger("click");
 
      },
-     error: function(){
-         
+     error: function(error){
+        $('.user-modal-alert-error').find('span').text(error.responseText)
+        $('.user-modal-alert-error').css("display","block")
+        $("#input-btn-cancel-user").trigger("click");
      }
  })
 
  })
  $("#input-btn-cancel-user").bind("click",function(){
-     userInfor = null;
+     userInfor = {};
      userAvatar = null;
      $("#user-modal-avatar").attr("src",originAvatarSrc);
+     $('#input-change-avatar').val(null);
 
  })
 

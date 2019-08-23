@@ -9,6 +9,8 @@ export const transErrors = {
     account_in_use: "Email nay da duoc su dung",
     login_failed: "login that bai",
      server_err: "co loi phia server",
+     avatar_type:"file type khong hop le",
+     avatar_size:"image allow upload acceed is 1mb",
     account_removed: "tai khoan nay da bi xoa khoi he thong",
     account_not_active: "Email nay chua duoc active, vui long ken tr email de active"
 };
@@ -21,7 +23,8 @@ export const tranSucces = {
     loginSuccess: (username) => {
         return `xin chao ${username} chuc ban mot ngay tot lanh`
     },
-    logout_success:"dang xuat tai khoan thanh cong"
+    logout_success:"dang xuat tai khoan thanh cong",
+    avatar_updated:"update avatar success, yeah"
 }
 
 export const transMail = {
