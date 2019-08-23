@@ -1277,6 +1277,6 @@ label:focus,
   border-color: #576574
 }
 
-.user-modal-alert-error, .user-modal-alert-success {
+.user-modal-alert-error, .user-modal-alert-success,.user-modal-pass-alert-error,.user-modal-pass-alert-success {
   display: none;
 }
