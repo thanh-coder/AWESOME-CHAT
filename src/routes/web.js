@@ -1,7 +1,7 @@
 import express from  'express';
 import passport from 'passport'
 let router = express.Router();
-import {home, auth} from '../controllers/index';
+import {home, auth,user} from '../controllers/index';
 import {authValid} from "../validations/index"
 import initPassportLocal from "../controllers/passportController/local";
 import initPassportFacebook from "../controllers/passportController/facebook";
@@ -33,7 +33,7 @@ let initRoutes = (app) => {
  successFlash: true
 }));
     router.get('/logout',auth.checkLogin,auth.getLogout);
-
+    router.put('/user/update-avatar',auth.checkLogin,user.updateAvatar)
     return app.use("/",router)
 }
 module.exports = initRoutes;

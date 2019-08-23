@@ -953,6 +953,7 @@ label:focus,
   animation-duration: 0.75s;
 }
 
+
 .right .chat.active-chat .bubble:nth-of-type(6) {
   -webkit-animation-duration: 0.9s;
   animation-duration: 0.9s;
@@ -1274,4 +1275,8 @@ label:focus,
 
 #user-profile-modal input:hover, #user-profile-modal input:focus {
   border-color: #576574
+}
+
+.user-modal-alert-error, .user-modal-alert-success {
+  display: none;
 }
