@@ -12,7 +12,6 @@ let register = async (email,gender,password,protocol,host) => {
         try{
         let userByEmail = await UserModel.findByEmail(email);
         // let userByEmail = await UserModel.findOne({"local.email":email})
-
         if(userByEmail){
             if(userByEmail.deletedAt != null){
                return new reject(transErrors.account_removed)
