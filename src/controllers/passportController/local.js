@@ -22,7 +22,6 @@
                     if(!checkPassword){
                         return done(null, false, req.flash("errors",transErrors.login_failed));
                     }
-                    console.log(user)
                     return done(null, user,req.flash("success",tranSucces.loginSuccess(user.username)));
             }catch(err){
                 console.log(err);
