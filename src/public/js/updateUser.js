@@ -214,14 +214,12 @@ function callUpdateUserPassword(){
         type: "put",
         data: userUpdatePassword,
         success: function(result){
-            console.log(result);
            $('.user-modal-pass-alert-success').find('span').text(result.message)
            $('.user-modal-pass-alert-success').css("display","block")
            $("#input-btn-cancel-password").trigger("click");
             callLogout();
         },
         error: function(error){
-            console.log(error)
            $('.user-modal-pass-alert-error').find('span').text(error.responseText)
            $('.user-modal-pass-alert-error').css("display","block")
            $("#input-btn-cancel-password").trigger("click");

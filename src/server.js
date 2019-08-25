@@ -5,27 +5,27 @@ import flash from "connect-flash";
 import passport from "passport";
 import config from "dotenv";
 import bodyParser from "body-parser";
-// import https from "https";
+import http from "http";
+import socketio from "socket.io";
+import passportSocketIo from "passport.socketio";
+import cookieParser  from 'cookie-parser';
+
+
+
 // import pem from "pem";
 
 import configViewEngine from "./config/viewEngine";
-import configSession from "./config/session";
+import session from "./config/session";
 import initRoutes from "./routes/web";
+import initSockets from "./socket/index"
+import configSocketIo from './config/socketio';
 let app = express();
+let server = http.createServer(app);
+let io = socketio(server);
 config.config();
 
 ConnectDB();
-configSession(app);
-// app.use(session({
-//   key:"express.sid",
-//   secret: "myscret",
-//   // store: sessionStore,
-//   resave: true,
-//   saveUninitialized: false,
-//   cookie:{
-//       maxAge: 1000*60*60*24
-//   }
-// }))
+session.config(app);
 
 configViewEngine(app);
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -33,14 +33,18 @@ app.use(bodyParser.urlencoded({ extended: false }));
 // parse application/json
 app.use(bodyParser.json());
 app.use(flash());
+app.use(cookieParser());
 
 //config passport
 app.use(passport.initialize());
 app.use(passport.session());
 initRoutes(app);
+configSocketIo(io);
+initSockets(io);
+
 
 console.log(process.env.APP_PORT);
-let server = app.listen(process.env.APP_PORT, process.env.APP_HOST, function() {
+server.listen(process.env.APP_PORT, process.env.APP_HOST, function() {
   console.log(
     `Ung dung Node.js dang hoat dong tai dia chi: http:// ${
       process.env.APP_HOST

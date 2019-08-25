@@ -11,12 +11,13 @@ let MongoStore = connectMongo(session);
 //     autoReconnect: true,
 //     autoRemove: "native"
 // })
+let sessionStore = new redisStore({ host: 'localhost', port: 6379, client: redisClient, ttl: 86400 });
 
-let configSession = (app) => {
+let config = (app) => {
    return app.use(session({
-        key:"express.sid",
-        secret: "myscret",
-        store: new redisStore({ host: 'localhost', port: 6379, client: redisClient, ttl: 86400 }),
+        key:process.env.SESSION_KEY,
+        secret: process.env.SESSION_SECRET,
+        store: sessionStore,
         resave: true,
         saveUninitialized: false,
         cookie:{
@@ -25,4 +26,7 @@ let configSession = (app) => {
     }))
 }
 
-module.exports =  configSession;
+module.exports = {
+    sessionStore,
+    config
+};
