@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import { user } from '../services';
 let Schema = mongoose.Schema;
 let ContactSchema = new Schema({
     userId: String,
@@ -9,12 +10,42 @@ let ContactSchema = new Schema({
     deletedAt: {type:Number, default: null},
 });
 
-ContactSchema.createNew = (item) => {
-    return this.create(item);
-}
+
 ContactSchema.statics = {
-    createNew:(item)=>{
+    createNew:function(item){
         return this.create(item);
+    },
+    findAllByUsers: function(userId){
+        return this.find({
+            $or: [
+                {"userId": userId},
+                {"contactId": userId}
+            ]
+        }).exec();
+    },
+    checkExists: function(userId,contactId){
+        return this.findOne({
+            $or: [
+                { $and: [
+                        {"userId": userId},
+                        {"contactId": contactId}
+                    ]
+                },
+                { $and: [
+                    {"userId": contactId},
+                    {"contactId": userId}
+                ]
+            }
+            ]
+        }).exec();
+    },
+    removeRequestContact: function(userId,contactId){
+        return this.remove({
+             $and: [
+                {"userId": userId},
+                {"contactId": contactId}
+            ]
+        }).exec();
     }
 }
 module.exports = mongoose.model("contact",ContactSchema);

@@ -1,7 +1,7 @@
 import express from  'express';
 import passport from 'passport'
 let router = express.Router();
-import {home, auth,user} from '../controllers/index';
+import {home, auth,user,contact} from '../controllers/index';
 import {authValid,userValid} from "../validations/index"
 import initPassportLocal from "../controllers/passportController/local";
 import initPassportFacebook from "../controllers/passportController/facebook";
@@ -36,6 +36,11 @@ let initRoutes = (app) => {
     router.put('/user/update-avatar',auth.checkLogin,user.updateAvatar);
     router.put('/user/update-info',auth.checkLogin,userValid.updateInfo,user.updateInfo);
     router.put('/user/update-password',auth.checkLogin,userValid.updatePassword,user.updatePassword);
+    router.get('/contact/find-users/:keyword',auth.checkLogin,contact.findUsersContact);
+    router.post('/contact/add-new',auth.checkLogin,contact.addNew);
+    router.delete('/contact/remove-request-contact',auth.checkLogin,contact.removeRequestContact);
+
+    
 
     return app.use("/",router)
 }
