@@ -21,3 +21,16 @@ function addContact(){
     })
 }
 
+socket.on("response-add-new-contact", function(user){
+    console.log(user.username)
+    let notif =`
+    <span data-uid="${ user.id }">
+    <img class="avatar-small" src="images/users/${user.avatar}" alt=""> 
+    <strong>${user.username}</strong> đã gửi lời mời kết bạn đến bạn!
+    </span><br><br><br>
+    `
+    $(".noti_content").prepend(notif);
+    increaseNumberNotification("count-request-contact-received");
+    increaseNumberNotification("noti_contact_counter");
+    increaseNumberNotification("noti_counter");
+})
