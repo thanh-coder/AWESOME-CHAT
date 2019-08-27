@@ -1,6 +1,8 @@
 import UserModel from '../models/userModel';
 import ContactModel from '../models/contactModel';
+import notificationModel from '../models/notificationModel';
 import _ from 'lodash';
+import {notification} from './index'
 
 let findUsersContact = (currentUserId, keyword) => {
     return new Promise(async (resolve, reject) => {
@@ -11,7 +13,6 @@ let findUsersContact = (currentUserId, keyword) => {
             deprecatedUserIds.push(contact.contactId);
         })
         deprecatedUserIds = _.uniqBy(deprecatedUserIds,keyword);
-        console.log(deprecatedUserIds)
         let users = await UserModel.findAllForAddContact(deprecatedUserIds, keyword);
         resolve(users);
     })
@@ -27,6 +28,12 @@ let addNew = (currentUserId, contactId) => {
           contactId
       }
       let newContact = await ContactModel.createNew(newContactItem);
+      let NotificationItem = {
+          senderId: currentUserId,
+          receiverId: contactId,
+          type: notificationModel.types.ADD_CONTACT,
+      }
+      await notificationModel.model.createNew(NotificationItem);
       resolve(newContact) 
     })
 }
@@ -37,6 +44,7 @@ let removeRequestContact = (currentUserId, contactId) => {
       if(removeContact.n == 0 ){
             return reject(false);
         }
+        await notificationModel.model.removeRequestContactNotification(currentUserId.toString(),contactId,notificationModel.types.ADD_CONTACT)
         resolve(true);
     })
 }
