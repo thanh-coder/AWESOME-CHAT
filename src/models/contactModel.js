@@ -48,4 +48,4 @@ ContactSchema.statics = {
         }).exec();
     }
 }
-module.exports = mongoose.model("contact",ContactSchema);
+module.exports = mongoose.models.contacts || mongoose.model("contacts",ContactSchema);
