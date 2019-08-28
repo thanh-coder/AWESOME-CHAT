@@ -1,15 +1,15 @@
-function increaseNumberNotification(className){
+function increaseNumberNotification(className,number){
     let currentValue = +$(`.${className}`).text();
-    currentValue += 1;
+    currentValue += number;
     if(currentValue === 0){
         $(`.${className}`).css("opacity","0").html("");
     } else{
         $(`.${className}`).css("opacity","1").html(currentValue);
     }
 }
-function decreaseNumberNotification(className){
+function decreaseNumberNotification(className,number){
     let currentValue = +$(`.${className}`).text();
-    currentValue -= 1;
+    currentValue -= number;
     if(currentValue === 0){
         $(`.${className}`).css("opacity","0").html("");
     } else{
