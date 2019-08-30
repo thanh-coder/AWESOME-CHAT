@@ -73,7 +73,10 @@ UserSchema.statics = {
                 }
             ]
         },{_id:1,username:1,address:1,phone:1})
-    }
+    },
+    getNornalUserById: function(id){
+        return this.findById(id,{_id:1,username:1,address:1,phone:1}).exec();
+    },
 }
 
 UserSchema.methods = {

@@ -1,6 +1,7 @@
 function increaseNumberNotification(className,number){
     let currentValue = +$(`.${className}`).text();
     currentValue += number;
+    console.log({className,currentValue})
     if(currentValue === 0){
         $(`.${className}`).css("opacity","0").html("");
     } else{

@@ -13,7 +13,7 @@ NotificationSchema.statics = {
     createNew:function(item){
         return this.create(item);
     },
-    removeRequestContactNotification: function(senderId, receivedId, type){
+    removeRequestContactSentNotification: function(senderId, receivedId, type){
         return this.remove({
             $and: [
                 {"senderId": senderId},
