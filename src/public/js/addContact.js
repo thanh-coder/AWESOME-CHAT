@@ -13,6 +13,8 @@ function addContact(){
         $.post("/contact/add-new",{uid:targetId},function(data){
             if(data.success){
                 increaseNumberContact("count-request-contact-sent");
+                increaseNumberNotification("noti_contact_counter",1);
+
                 $("#find-user").find(`div.user-add-new-contact[data-uid=${targetId}]`).hide();
                 $("#find-user").find(`div.user-remove-request-contact-sent[data-uid=${targetId}]`).css("display","inline-block");
                 socket.emit("add-new-contact",{contactId:targetId})
@@ -27,7 +29,6 @@ function addContact(){
 }
 
 socket.on("response-add-new-contact", function(user){
-    console.log(user.username)
     let notif =`
     <div data-uid="${ user.id }">
     <img class="avatar-small" src="images/users/${user.avatar}" alt=""> 
@@ -36,7 +37,7 @@ socket.on("response-add-new-contact", function(user){
     `
     $(".noti_content").prepend(notif);
     $("#ul.list-notifications").prepend(`<li>${notif}</li>`);
-    increaseNumberNotification("count-request-contact-received",1);
+    increaseNumberContact("count-request-contact-received");
     increaseNumberNotification("noti_contact_counter",1);
     increaseNumberNotification("noti_counter",1);
     let userInFoHtml = `
@@ -57,11 +58,12 @@ socket.on("response-add-new-contact", function(user){
         <div class="user-acccept-contact-received" data-uid="${user.id}">
             Chấp nhận
         </div>
-        <div class="user-reject-request-contact-received action-danger" data-uid="${user.id}">
+        <div class="user-remove-request-contact-received action-danger" data-uid="${user.id}">
             Xóa yêu cầu
         </div>
     </div>
 </li>
     `
 $("#request-contact-received").find("ul").prepend(userInFoHtml);
+removeRequestContactReceived();
 })
