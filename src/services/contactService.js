@@ -2,7 +2,7 @@ import UserModel from '../models/userModel';
 import ContactModel from '../models/contactModel';
 import notificationModel from '../models/notificationModel';
 import _ from 'lodash';
-import {notification} from './index'
+import {notification, user} from './index'
 
 const LIMIT_NUMBER = 1;
 let findUsersContact = (currentUserId, keyword) => {
@@ -46,7 +46,19 @@ let removeRequestContactSent = (currentUserId, contactId) => {
             return reject(false);
         }
         console.log(removeContact)
-        await notificationModel.model.removeRequestContactSentNotification(currentUserId.toString(),contactId,notificationModel.types.ADD_CONTACT)
+        // await notificationModel.model.removeRequestContactSentNotification(currentUserId.toString(),contactId,notificationModel.types.ADD_CONTACT)
+        resolve(true);
+    })
+}
+
+let removeRequestContactReceived = (currentUserId, contactId) => {
+    return new Promise(async (resolve, reject) => {
+      let removeContact = await ContactModel.removeRequestContactReceived(currentUserId.toString(), contactId);
+      if(removeContact.n == 0 ){
+            return reject(false);
+        }
+        console.log(removeContact)
+        // await notificationModel.model.removeRequestContactReceivedNotification(currentUserId.toString(),contactId,notificationModel.types.ADD_CONTACT)
         resolve(true);
     })
 }
@@ -200,6 +212,7 @@ module.exports = {
     findUsersContact,
     addNew,
     removeRequestContactSent,
+    removeRequestContactReceived,
     getContacts,
     getContactSent,
     getContactReceived,

@@ -3,17 +3,17 @@ function increaseNumberNotification(className,number){
     currentValue += number;
     console.log({className,currentValue})
     if(currentValue === 0){
-        $(`.${className}`).css("opacity","0").html("");
+        $(`.${className}`).css("display","none").html("");
     } else{
-        $(`.${className}`).css("opacity","1").html(currentValue);
+        $(`.${className}`).css("display","block").html(currentValue);
     }
 }
 function decreaseNumberNotification(className,number){
     let currentValue = +$(`.${className}`).text();
     currentValue -= number;
     if(currentValue === 0){
-        $(`.${className}`).css("opacity","0").html("");
+        $(`.${className}`).css("display","none").html("");
     } else{
-        $(`.${className}`).css("opacity","1").html(currentValue);
+        $(`.${className}`).css("display","block").html(currentValue);
     }
 }

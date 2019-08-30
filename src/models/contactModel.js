@@ -47,6 +47,14 @@ ContactSchema.statics = {
             ]
         }).exec();
     },
+    removeRequestContactReceived: function(userId,contactId){
+        return this.remove({
+             $and: [
+                {"userId": contactId},
+                {"contactId": userId}
+            ]
+        }).exec();
+    },
     getContactSent: function(userId, limit){
         return this.find({
             $and: [
