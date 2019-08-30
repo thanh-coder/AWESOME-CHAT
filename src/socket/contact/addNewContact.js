@@ -8,7 +8,8 @@ let addNewContact = (io) => {
             let currentUser = {
                 id: socket.request.user._id,
                 username:socket.request.user.username!=undefined ? socket.request.user.username : socket.request.user.google.email,
-                avatar: socket.request.user.avatar 
+                avatar: socket.request.user.avatar,
+                address: socket.request.user.address != null ? socket.request.user.address : ""
             }
             console.log(socket.request.user)
             if(clients[data.contactId]){

@@ -4,6 +4,7 @@ import notificationModel from '../models/notificationModel';
 import _ from 'lodash';
 import {notification} from './index'
 
+const LIMIT_NUMBER = 1;
 let findUsersContact = (currentUserId, keyword) => {
     return new Promise(async (resolve, reject) => {
         let deprecatedUserIds = [currentUserId];
@@ -38,19 +39,174 @@ let addNew = (currentUserId, contactId) => {
     })
 }
 
-let removeRequestContact = (currentUserId, contactId) => {
+let removeRequestContactSent = (currentUserId, contactId) => {
     return new Promise(async (resolve, reject) => {
-      let removeContact = await ContactModel.removeRequestContact(currentUserId.toString(), contactId);
+      let removeContact = await ContactModel.removeRequestContactSent(currentUserId.toString(), contactId);
       if(removeContact.n == 0 ){
             return reject(false);
         }
-        await notificationModel.model.removeRequestContactNotification(currentUserId.toString(),contactId,notificationModel.types.ADD_CONTACT)
+        console.log(removeContact)
+        await notificationModel.model.removeRequestContactSentNotification(currentUserId.toString(),contactId,notificationModel.types.ADD_CONTACT)
         resolve(true);
+    })
+}
+
+let getContacts = (currentUserId) => {
+    return new Promise(async (resolve, reject) => {
+     try{
+
+        let contacts = await ContactModel.getContacts(currentUserId, LIMIT_NUMBER);
+        // console.log("contacts",contacts)
+        let users = contacts.map(async (contact) => {
+            if(contact.contactId == currentUserId){
+                return await UserModel.getNornalUserById(contact.userId);
+            } else{
+            return await UserModel.getNornalUserById(contact.contactId);
+
+            }
+        })
+        resolve(await Promise.all(users));
+     } catch(error){
+         console.log(error);
+     }
+     
+    })
+}
+
+let getContactSent = (currentUserId) => {
+    return new Promise(async (resolve, reject) => {
+     try{
+        let contacts = await ContactModel.getContactSent(currentUserId.toString(), LIMIT_NUMBER);
+        // console.log("getContactSent",contacts)
+
+        let users = contacts.map(async (contact) => {
+            return await UserModel.getNornalUserById(contact.contactId);
+        })
+        resolve(await Promise.all(users));
+     } catch(error){
+         console.log(error);
+     }
+     
+    })
+}
+
+let getContactReceived = (currentUserId) => {
+    return new Promise(async (resolve, reject) => {
+     try{
+        let contacts = await ContactModel.getContactReceived(currentUserId.toString(), LIMIT_NUMBER);
+        // console.log("getContactReceived",contacts)
+        let users = contacts.map(async (contact) => {
+            return await UserModel.getNornalUserById(contact.userId);
+        })
+        resolve(await Promise.all(users));
+     } catch(error){
+         console.log(error);
+     }
+     
+    })
+}
+let countAllContacts = (currentUserId) => {
+    return new Promise(async (resolve, reject) => {
+     try{
+        let count = await ContactModel.countAllContacts(currentUserId.toString());
+        resolve(count);
+     } catch(error){
+        console.log(error);
+    }
+     
+    })
+}
+
+let countAllContactSent = (currentUserId) => {
+    return new Promise(async (resolve, reject) => {
+     try{
+        let count = await ContactModel.countAllContactSent(currentUserId.toString());
+        resolve(count);
+     } catch(error){
+         console.log(error);
+     }
+     
+    })
+}
+
+let countAllContactReceived = (currentUserId) => {
+    return new Promise(async (resolve, reject) => {
+     try{
+        let count = await ContactModel.countAllContactReceived(currentUserId.toString());
+        resolve(count);
+     } catch(error){
+        console.log(error);
+    }
+    })
+}
+
+let readMoreContacts = (currentUserId, skipNumberContacts) => {
+    return new Promise(async (resolve, reject) => {
+     try{
+        console.log("currentUserId",skipNumberContacts)
+
+        let newContacts = await ContactModel.readMoreContacts(currentUserId, skipNumberContacts ,LIMIT_NUMBER);
+        console.log("newcontacts",newContacts)
+        let users = newContacts.map(async (contact) => {
+            if(contact.contactId == currentUserId){
+                return await UserModel.getNornalUserById(contact.userId);
+            } else{
+            return await UserModel.getNornalUserById(contact.contactId);
+            }
+        })
+        resolve(await Promise.all(users));
+     } catch(error){
+         console.log(error);
+     }
+     
+    })
+}
+
+let readMoreContactSent = (currentUserId, skipNumberContacts) => {
+    return new Promise(async (resolve, reject) => {
+     try{
+
+        let newContacts = await ContactModel.readMoreContactSent(currentUserId, skipNumberContacts ,LIMIT_NUMBER);
+        console.log("newcontacts",newContacts)
+        let users = newContacts.map(async (contact) => {
+            return await UserModel.getNornalUserById(contact.contactId);
+        })
+        resolve(await Promise.all(users));
+     } catch(error){
+         console.log(error);
+     }
+     
+    })
+}
+
+let readMoreContactReceiver = (currentUserId, skipNumberContacts) => {
+    return new Promise(async (resolve, reject) => {
+     try{
+
+        let newContacts = await ContactModel.readMoreContactReceiver(currentUserId, skipNumberContacts ,LIMIT_NUMBER);
+        console.log("newcontacts",newContacts)
+        let users = newContacts.map(async (contact) => {
+            return await UserModel.getNornalUserById(contact.userId);
+        })
+        resolve(await Promise.all(users));
+     } catch(error){
+         console.log(error);
+     }
+     
     })
 }
 
 module.exports = {
     findUsersContact,
     addNew,
-    removeRequestContact
+    removeRequestContactSent,
+    getContacts,
+    getContactSent,
+    getContactReceived,
+    countAllContacts,
+    countAllContactReceived,
+    countAllContactSent,
+    readMoreContacts,
+    readMoreContactSent,
+    readMoreContactReceiver
 }
