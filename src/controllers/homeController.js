@@ -9,7 +9,7 @@ let getHome = async (req, res) => {
     let countAllContacts = await contact.countAllContacts(req.user._id);
     let countAllContactSent = await contact.countAllContactSent(req.user._id);
     let countAllContactReceived = await contact.countAllContactReceived(req.user._id);
-    console.log({countAllContacts,countAllContactSent,countAllContactReceived})
+    console.log("countAllContacts",{countAllContacts,countAllContactSent,countAllContactReceived})
 
     return res.render('main/home/home',{
         success:req.flash("success"),
