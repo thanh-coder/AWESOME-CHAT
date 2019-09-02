@@ -43,7 +43,9 @@ ContactSchema.statics = {
         return this.remove({
              $and: [
                 {"userId": userId},
-                {"contactId": contactId}
+                {"contactId": contactId},
+                {"status":false}
+
             ]
         }).exec();
     },
@@ -51,7 +53,9 @@ ContactSchema.statics = {
         return this.remove({
              $and: [
                 {"userId": contactId},
-                {"contactId": userId}
+                {"contactId": userId},
+                {"status":false}
+
             ]
         }).exec();
     },
@@ -114,7 +118,7 @@ ContactSchema.statics = {
             $and: [
                 {$or:[
                     {"userId":userId},
-                    {"contactId":userId}
+                    {"contactId":userId},
                 ]},
                 {"status":true}
             ]
@@ -135,6 +139,15 @@ ContactSchema.statics = {
                 {"status":false}
             ]
         }).sort({"createdAt":-1}).skip(skip).limit(limit).exec();
+    },
+    approveRequestContactReceived: function(userId, contactId){
+        return this.update({
+            $and: [
+                    {"userId":contactId},
+                    {"contactId":userId},
+                    {"status":false}
+                ]},
+                {"status":true}).exec();
     },
 }
 module.exports = mongoose.models.contacts || mongoose.model("contacts",ContactSchema);

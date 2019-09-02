@@ -64,7 +64,7 @@ let readMoreContactReceiver =  async (req,res) => {
         let newContactUsers = await contact.readMoreContactReceiver(req.user._id,skipNumerNotification);
         return res.status(200).send(newContactUsers);
     } catch(error) {
-        console.error();
+        console.log(error);
         return res.status(500).send(error)
     }
 };
@@ -75,7 +75,7 @@ let readMoreContactSent =  async (req,res) => {
         let newContactUsers = await contact.readMoreContactSent(req.user._id,skipNumerNotification);
         return res.status(200).send(newContactUsers);
     } catch(error) {
-        console.error();
+        console.log(error);
         return res.status(500).send(error)
     }
 }
@@ -87,7 +87,18 @@ let removeRequestContactReceived =  async (req,res) => {
         let removeContact = await contact.removeRequestContactReceived(req.user._id,contactId);
         return res.status(200).send({success:!!removeContact})
     } catch(error) {
-        console.error();
+        console.log(error);
+        return res.status(500).send(error)
+    }
+}
+
+let approveRequestContactReceived =  async (req,res) => {
+    try {
+        let contactId = req.body.uid;
+        let removeContact = await contact.approveRequestContactReceived(req.user._id,contactId);
+        return res.status(200).send({success:!!removeContact})
+    } catch(error) {
+        console.log(error);
         return res.status(500).send(error)
     }
 }
@@ -95,6 +106,7 @@ module.exports = {
     findUsersContact,
     addNew,
     removeRequestContactSent,
+    approveRequestContactReceived,
     removeRequestContactReceived,
     readMoreContacts,
     readMoreContactSent,

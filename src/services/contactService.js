@@ -63,6 +63,23 @@ let removeRequestContactReceived = (currentUserId, contactId) => {
     })
 }
 
+let approveRequestContactReceived = (currentUserId, contactId) => {
+    return new Promise(async (resolve, reject) => {
+      let approveReq = await ContactModel.approveRequestContactReceived(currentUserId.toString(), contactId);
+      if(approveReq.nModified == 0 ){
+            return reject(false);
+        }
+        console.log(approveReq)
+        let notificationItem = {
+            senderId: currentUserId,
+            receiverId: contactId,
+            type: notificationModel.types.APPROVE_CONTACT,
+        };
+        await notificationModel.model.createNew(notificationItem)
+        resolve(true);
+    })
+}
+
 let getContacts = (currentUserId) => {
     return new Promise(async (resolve, reject) => {
      try{
@@ -221,5 +238,6 @@ module.exports = {
     countAllContactSent,
     readMoreContacts,
     readMoreContactSent,
-    readMoreContactReceiver
+    readMoreContactReceiver,
+    approveRequestContactReceived
 }

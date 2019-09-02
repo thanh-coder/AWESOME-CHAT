@@ -39,6 +39,7 @@ $(document).ready(function(){
                     `)
                 });
                 removeRequestContactReceived();
+                approveRequestContactReceived();
                 $("#link-read-more-contact-receiver").css("display","inline-block");
                 $(".read-more-contacts-receiver-loader").css("display","none");
             })
