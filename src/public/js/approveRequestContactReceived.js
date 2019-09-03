@@ -33,6 +33,7 @@ function approveRequestContactReceived(){
                 decreaseNumberNotification("noti_contact_counter",1);
                 increaseNumberContact("count-contacts")
                 $("#request-contact-received").find(`li[data-uid=${targetId}]`).remove();
+                removeContact();
 
                 socket.emit("approve-request-contact-received",{contactId:targetId})
             }
@@ -57,7 +58,7 @@ socket.on("response-approve-request-contact-received", function(user){
     $("#request-contact-sent").find(`li[data-uid=${user.id}]`).remove();
     $("#find-user").find(`li[data-uid=${user.id}]`).remove();
     let userInfoHtml =`
-    <li class="_contactList" data-uid="${ user._id }">
+    <li class="_contactList" data-uid="${ user.id }">
     <div class="contactPanel">
         <div class="user-avatar">
             <img src="images/users/${ user.avatar }" alt="">

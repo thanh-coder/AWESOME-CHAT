@@ -149,5 +149,24 @@ ContactSchema.statics = {
                 ]},
                 {"status":true}).exec();
     },
+    removeContact:function(userId,contactId){
+        return this.remove({
+            $or: [
+                { $and: [
+                        {"userId": userId},
+                        {"contactId": contactId},
+                         {"status": true}
+                    ]
+                },
+                { $and: [
+                    {"userId": contactId},
+                    {"contactId": userId},
+                    {"status": true}
+
+                ]
+            }
+            ]
+        }).exec();
+    },
 }
 module.exports = mongoose.models.contacts || mongoose.model("contacts",ContactSchema);
