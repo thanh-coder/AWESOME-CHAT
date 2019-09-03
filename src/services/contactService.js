@@ -225,11 +225,24 @@ let readMoreContactReceiver = (currentUserId, skipNumberContacts) => {
     })
 }
 
+let removeContact = (currentUserId, skipNumberContacts) => {
+    return new Promise(async (resolve, reject) => {
+        let removeContact = await ContactModel.removeContact(currentUserId, skipNumberContacts ,LIMIT_NUMBER);
+        if(removeContact.n == 0 ){
+            return reject(false);
+        }
+        console.log(removeContact)
+        // await notificationModel.model.removeRequestContactReceivedNotification(currentUserId.toString(),contactId,notificationModel.types.ADD_CONTACT)
+        resolve(true);
+})
+}
+
 module.exports = {
     findUsersContact,
     addNew,
     removeRequestContactSent,
     removeRequestContactReceived,
+    removeContact,
     getContacts,
     getContactSent,
     getContactReceived,

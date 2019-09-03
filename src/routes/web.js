@@ -40,6 +40,7 @@ let initRoutes = (app) => {
     router.post('/contact/add-new',auth.checkLogin,contact.addNew);
     router.delete('/contact/remove-request-contact',auth.checkLogin,contact.removeRequestContactSent);
     router.delete('/contact/remove-request-contact-received',auth.checkLogin,contact.removeRequestContactReceived);
+    router.delete('/contact/remove-contact',auth.checkLogin,contact.removeContact);
     router.put('/contact/approve-request-contact-received',auth.checkLogin,contact.approveRequestContactReceived);
     router.get('/contact/find-users/:keyword',auth.checkLogin,contact.findUsersContact);
     router.get('/notification/read-more',auth.checkLogin,notification.readMore);
