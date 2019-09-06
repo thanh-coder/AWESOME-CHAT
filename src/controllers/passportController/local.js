@@ -36,7 +36,7 @@
 });
 
 passport.deserializeUser(function(id, done) {
-    UserModel.findUserById(id).then(function (user) {
+    UserModel.findUserByIdForSessionToUse(id).then(function (user) {
         done(null, user);
     }).catch(function (err) {
         console.log(err);

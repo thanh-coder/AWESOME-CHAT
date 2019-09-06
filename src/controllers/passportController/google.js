@@ -54,7 +54,7 @@ passport.serializeUser(function(user, done) {
 });
 
 passport.deserializeUser(function(id, done) {
-  UserModel.findUserById(id)
+  UserModel.findUserByIdForSessionToUse(id)
     .then(function(user) {
       done(null, user);
     })
