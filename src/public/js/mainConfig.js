@@ -12,19 +12,19 @@ function nineScrollLeft() {
   });
 }
 
-function nineScrollRight() {
-  $('.right .chat').niceScroll({
+function nineScrollRight(divId) {
+  $(`.right .chat[data-chat = ${divId}]`).niceScroll({
     smoothscroll: true,
     horizrailenabled: false,
     cursorcolor: '#ECECEC',
     cursorwidth: '7px',
     scrollspeed: 50
   });
-  $('.right .chat').scrollTop($('.right .chat')[0].scrollHeight);
+  $(`.right .chat[data-chat = ${divId}]`).scrollTop($(`.right .chat[data-chat = ${divId}]`)[0].scrollHeight);
 }
 
-function enableEmojioneArea(chatId) {
-  $('.write-chat[data-chat="' + chatId + '"]').emojioneArea({
+function enableEmojioneArea(divId) {
+  $('.write-chat[data-chat="' + divId + '"]').emojioneArea({
     standalone: false,
     pickerPosition: 'top',
     filtersPosition: 'bottom',
@@ -36,7 +36,10 @@ function enableEmojioneArea(chatId) {
     shortnames: false,
     events: {
       keyup: function(editor, event) {
-        $('.write-chat').val(this.getText());
+        $(`.write-chat-${divId}`).val(this.getText());
+      },
+      click: function(){
+        textAndEmojiChat(divId);
       }
     },
   });
@@ -83,25 +86,30 @@ function configNotification() {
 }
 
 function gridPhotos(layoutNumber) {
-  let countRows = Math.ceil($('#imagesModal').find('div.all-images>img').length / layoutNumber);
-  let layoutStr = new Array(countRows).fill(layoutNumber).join("");
-  $('#imagesModal').find('div.all-images').photosetGrid({
-    highresLinks: true,
-    rel: 'withhearts-gallery',
-    gutter: '2px',
-    layout: layoutStr,
-    onComplete: function() {
-      $('.all-images').css({
-        'visibility': 'visible'
-      });
-      $('.all-images a').colorbox({
-        photo: true,
-        scalePhotos: true,
-        maxHeight: '90%',
-        maxWidth: '90%'
-      });
-    }
-  });
+  $(".show-images").unbind("click").on("click",function(){
+    let href = $(this).attr("href");
+    let modalImagesId = href.replace("#","");
+    let countRows = Math.ceil($('#imagesModal').find('div.all-images>img').length / layoutNumber);
+    let layoutStr = new Array(countRows).fill(layoutNumber).join("");
+    $(`#${modalImagesId}`).find('div.all-images').photosetGrid({
+      highresLinks: true,
+      rel: 'withhearts-gallery',
+      gutter: '2px',
+      layout: layoutStr,
+      onComplete: function() {
+        $(`#${modalImagesId}`).find('div.all-images').css({
+          'visibility': 'visible'
+        });
+        $('.all-images a').colorbox({
+          photo: true,
+          scalePhotos: true,
+          maxHeight: '90%',
+          maxWidth: '90%'
+        });
+      }
+    });
+  })
+ 
 }
 
 function showButtonGroupChat() {
@@ -150,7 +158,45 @@ if(notify.length){
 }
 }
 
+function changeTypeChat(){
+  $("#select-type-chat").bind("change", function(){
+    let optionSelected = $("option:selected", this);
+    optionSelected.tab("show");
+    if($(this).val()==="user-chat"){
+      $(".create-group-chat").hide();    
+  } else {
+    $(".create-group-chat").show();
+  }
+  })
+}
+
+function changeScreenChat(){
+  $(".room-chat").unbind("click").on("click",function(){
+    $(".person").removeClass("active");
+    let divId = $(this).find("li").data("chat");
+
+    $(`.person[data-chat=${divId}]`).addClass("active");
+    $(this).tab("show");
+    nineScrollRight(divId);
+    enableEmojioneArea(divId);
+
+  })
+}
+
+function convertEmoji(){
+    $(".convert-emoji").each(function() {
+        var original = $(this).html();
+        // use .shortnameToImage if only converting shortnames (for slightly better performance)
+        var converted = emojione.toImage(original);
+        $(this).html(converted);
+    });
+}
+
+
+
 $(document).ready(function() {
+//convert unicode to image emotion
+ convertEmoji();
   // Hide số thông báo trên đầu icon mở modal contact
   showModalContacts();
 
@@ -159,10 +205,8 @@ $(document).ready(function() {
 
   // Cấu hình thanh cuộn
   nineScrollLeft();
-  nineScrollRight();
 
   // Bật emoji, tham số truyền vào là id của box nhập nội dung tin nhắn
-  enableEmojioneArea("17071995");
 
   // Icon loading khi chạy ajax
   ajaxLoading();
@@ -181,4 +225,8 @@ $(document).ready(function() {
   cancelCreateGroup();
   //hien thi thong bao login vao page
   flashMasterNotify();
+  //thay doi cuoc tro chuyen
+  changeTypeChat();
+  changeScreenChat();
+  $("ul.people").find("li")[0].click();
 });

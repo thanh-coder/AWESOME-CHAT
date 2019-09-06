@@ -1,15 +1,19 @@
 import mongoose from 'mongoose';
 let Schema = mongoose.Schema;
 let MessageSchema = new Schema({
+    senderId:String,
+    receiverId:String,
+    conversationType:String,
+    messageType:String,
     sender: {
         id: String,
-        username: String,
-        avatar: string,
+        name: String,
+        avatar: String,
     },
     receiver: {
         id: String,
-        username: String,
-        avatar: string,
+        name: String,
+        avatar: String,
     },
     text: String,
     file: {data: Buffer, contentType: String, fileName: String},
@@ -17,4 +21,48 @@ let MessageSchema = new Schema({
     updatedAt: {type:Number, default: null},
     deletedAt: {type:Number, default: null},
 });
-module.exports = mongoose.model("contact",MessageSchema);
+MessageSchema.statics = {
+    createNew:function(item){
+        return this.create(item);
+    },
+    getMessagesInPersonal : function(senderId,receiverId,limit){
+        return this.find({
+            $or : [
+                {
+                    $and: [
+                        {"senderId":senderId},
+                        {"receiverId":receiverId}
+                    ]
+                },
+                {
+                    $and: [
+                        {"receiverId":senderId},
+                        {"senderId":receiverId}
+                    ]
+                }
+            ]
+        }).sort({"createdAt":-1}).limit(limit).exec();
+    },
+    getMessagesInGroup: function(receiverId,limit){
+        return this.find(
+            {"senderId":senderId}
+        ).sort({"createdAt":-1}).limit(limit).exec();
+    }
+}
+
+const MESSAGE_CONVERSATION_TYPES = {
+    PERSONAL: "personal",
+    GROUP: "group"
+}
+
+const MESSAGE_TYPES ={
+    TEXT: "text",
+    IMAGE: "image",
+    FILE:"file"
+}
+module.exports ={
+model: mongoose.models.messages||mongoose.model("message",MessageSchema),
+conversationTypes:MESSAGE_CONVERSATION_TYPES,
+messageTypes:MESSAGE_TYPES
+
+}

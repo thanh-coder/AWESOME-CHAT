@@ -43,9 +43,12 @@ UserSchema.statics = {
     return this.findOneAndUpdate({"local.verifyToken":token},
     {"local.isActive":true,"local.verifyToken":null}).exec();
    },
-   findUserById: function(id){
+   findUserByIdToUpdatePassword: function(id){
        return this.findById(id).exec();
    },
+   findUserByIdForSessionToUse: function(id){
+    return this.findById(id,{"local.password":0}).exec();
+},
    findByFaceBookUid: function(uid){
        return this.findOne({"facebook.uid":uid}).exec();
    },
@@ -75,7 +78,7 @@ UserSchema.statics = {
         },{_id:1,username:1,address:1,phone:1})
     },
     getNornalUserById: function(id){
-        return this.findById(id,{_id:1,username:1,address:1,phone:1}).exec();
+        return this.findById(id,{_id:1,username:1,address:1,phone:1,avatar:1}).exec();
     },
 }
 

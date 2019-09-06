@@ -1,8 +1,8 @@
 import express from  'express';
 import passport from 'passport'
 let router = express.Router();
-import {home, auth,user,contact,notification} from '../controllers/index';
-import {authValid,userValid} from "../validations/index"
+import {home, auth,user,contact,notification, message} from '../controllers/index';
+import {authValid,userValid,messageValid} from "../validations/index"
 import initPassportLocal from "../controllers/passportController/local";
 import initPassportFacebook from "../controllers/passportController/facebook";
 import initPassportGoogle from "../controllers/passportController/google";
@@ -48,7 +48,7 @@ let initRoutes = (app) => {
     router.get('/contact/read-more-contacts',auth.checkLogin,contact.readMoreContacts);
     router.get('/contact/read-more-contacts-sent',auth.checkLogin,contact.readMoreContactSent);
     router.get('/contact/read-more-contacts-receiver',auth.checkLogin,contact.readMoreContactReceiver);
-
+    router.post("/message/add-new-text-emoji",auth.checkLogin,messageValid.checkMessageLength,message.addNewTextEmoji)
     return app.use("/",router)
 }
 module.exports = initRoutes;

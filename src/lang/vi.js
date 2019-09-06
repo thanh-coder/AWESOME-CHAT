@@ -7,6 +7,8 @@ export const transValidation ={
     update_gender:"du lieu gioi tinh co van de",
     update_adress:"dia chi gioi han trong khoang 3-30 ki tu",
     update_phone:"so dien thoai bat dau boi so 0 va co 10-11 ki tu",
+    message_text_emoji_incorrect:"tin nhan khong hop le.dam bao toi thieu 1 ki tu",
+    keyword_find_user:"keyword tim kiem khong hop le"
 }
 
 export const transErrors = {
@@ -18,6 +20,7 @@ export const transErrors = {
      avatar_size:"image allow upload acceed is 1mb",
     account_removed: "tai khoan nay da bi xoa khoi he thong",
     password_current_failed:"mat khau hien tai khong ching xac",
+    conversation_not_found:"cuoc tro chuyen khong ton tai",
    
     account_not_active: "Email nay chua duoc active, vui long ken tr email de active"
 };

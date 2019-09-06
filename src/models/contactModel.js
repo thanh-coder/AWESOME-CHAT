@@ -76,7 +76,7 @@ ContactSchema.statics = {
                 ]},
                 {"status":true}
             ]
-        }).sort({"createdAt":-1}).limit(limit).exec();
+        }).sort({"updatedAt":-1}).limit(limit).exec();
     },
     getContactReceived: function(userId, limit){
         return this.find({
@@ -122,7 +122,7 @@ ContactSchema.statics = {
                 ]},
                 {"status":true}
             ]
-        }).sort({"createdAt":-1}).skip(skip).limit(limit).exec();
+        }).sort({"updatedAt":-1}).skip(skip).limit(limit).exec();
     },
     readMoreContactSent: function(userId, skip, limit){
         return this.find({
@@ -147,7 +147,7 @@ ContactSchema.statics = {
                     {"contactId":userId},
                     {"status":false}
                 ]},
-                {"status":true}).exec();
+                {"status":true,"updatedAt":Date.now()}).exec();
     },
     removeContact:function(userId,contactId){
         return this.remove({
@@ -168,5 +168,22 @@ ContactSchema.statics = {
             ]
         }).exec();
     },
+    updateWhenHasNewMessage : function(userId, contactId){
+       return this.update({
+             $or: [
+            { $and: [
+                    {"userId": userId},
+                    {"contactId": contactId}
+                ]
+            },
+            { $and: [
+                {"userId": contactId},
+                {"contactId": userId}
+            ]
+        }
+        ]
+    },{"updatedAt":Date.now()
+    }).exec();
+    }
 }
 module.exports = mongoose.models.contacts || mongoose.model("contacts",ContactSchema);

@@ -8,7 +8,7 @@ let getNotifications = (currentUserId) => {
             let limit = 10;
             let notifications = await NotificationModel.model.getByUserIdAndLimit(currentUserId,LIMIT_NUMBER);
             let getNotifiContents = notifications.map(async (notification) => {
-                let sender = await UserModel.findUserById(notification.senderId);
+                let sender = await UserModel.findUserByIdForSessionToUse(notification.senderId);
                 return NotificationModel.contents.getContent(notification.type, notification.isRead,sender._id,sender.username,sender.avatar)
             })
             resolve(await Promise.all(getNotifiContents))
