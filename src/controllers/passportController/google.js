@@ -53,14 +53,16 @@ passport.serializeUser(function(user, done) {
   done(null, user._id);
 });
 
-passport.deserializeUser(function(id, done) {
-  UserModel.findUserByIdForSessionToUse(id)
-    .then(function(user) {
-      done(null, user);
-    })
-    .catch(function(err) {
-      console.log(err);
-    });
+passport.deserializeUser(async function(id, done) {
+  try{
+    let user = UserModel.findUserByIdForSessionToUse(id);
+    let getChatGroupIds =  await ChatGroupModel.getChatGroupIdsUser(user._id);
+    user = user.toObject();
+    user.chatGroupIds = getChatGroupIds;
+    return done(null, user);     
+} catch(error){
+    return done(error, null)
+}
 });
 
 module.exports = initPassportGoogle;

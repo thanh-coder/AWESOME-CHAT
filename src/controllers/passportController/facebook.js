@@ -4,6 +4,7 @@ import config from "dotenv";
 
 import { transErrors, tranSucces, transMail } from "../../lang/vi";
 import UserModel from "../../models/userModel";
+import ChatGroupModel from "../../models/chatGroupModel"
 config.config();
 
 let fbAppId = process.env.FB_APP_ID;
@@ -53,14 +54,16 @@ passport.serializeUser(function(user, done) {
   done(null, user._id);
 });
 
-passport.deserializeUser(function(id, done) {
-  UserModel.findUserById(id)
-    .then(function(user) {
-      done(null, user);
-    })
-    .catch(function(err) {
-      console.log(err);
-    });
+passport.deserializeUser(async function(id, done) {
+  try{
+    let user = UserModel.findUserByIdForSessionToUse(id);
+    let getChatGroupIds =  await ChatGroupModel.getChatGroupIdsUser(user._id);
+    user = user.toObject();
+    user.chatGroupIds = getChatGroupIds;
+    return done(null, user);     
+} catch(error){
+    return done(error, null)
+}
 });
 
 module.exports = initPassportFacebook;

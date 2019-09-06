@@ -122,8 +122,7 @@
                                  <% conversation.messages.forEach(function(message) {%>
                                    <% if(message.messageType === "text") { %>
                                           <div class="convert-emoji bubble <% if(message.senderId == user._id){ %> me <% }
-                                          else { %> you <% } %>" data-mess-id="<%= message._id %>">
-                                        <img class="avatar-small" src="/images/users/<%= message.sender.avatar %>" >                                          
+                                          else { %> you <% } %>" data-mess-id="<%= message._id %>">                                         
                                             <%= message.text %>    
                                           </div>
                                    <% } %>
@@ -131,7 +130,6 @@
                                     <% if(message.messageType === "image") { %>
                                     <div class="bubble <% if(message.senderId == user._id){ %> me <% }
                                           else { %> you <% } %> bubble-image-file" data-mess-id="<%= message._id %>">
-                                        <img class="avatar-small" title="<%= message.sender.name %>" src="/images/users/<%= message.sender.avatar %>" >                                     
                                         <img src="data:<%= message.file.contentType %>;base64, <%= bufferToBase64(message.file.data) %> " class="show-image-chat" >
                                     </div>
                                     <% } %>
@@ -139,7 +137,6 @@
                                  <% if(message.messageType === "file") { %>
                                     <div class="bubble <% if(message.senderId == user._id){ %> me <% }
                                           else { %> you <% } %> bubble-image-file" data-mess-id="<%= message._id %>">
-                                        <img class="avatar-small" title="<%= message.sender.name %>" src="/images/users/<%= message.sender.avatar %>" >                                      
                                         <a href="data:<%= message.file.contentType %>;base64, <%= bufferToBase64(message.file.data) %>" 
                                         download="<%= message.file.fileName %>">
                                             <%= message.file.fileName %>
