@@ -53,6 +53,7 @@ function textAndEmojiChat(divId){
     })
 }
 
+$(document).ready(function(){
     socket.on("response-chat-text-emoji", function(response){
 
         let divId = "";
@@ -87,3 +88,4 @@ function textAndEmojiChat(divId){
                 })
                 $(`.person[data-chat=${divId}]`).trigger("manhhung.moveConversationToTheTop");
     })
+})
