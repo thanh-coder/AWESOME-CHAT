@@ -5,6 +5,7 @@ import approveRequsetContactReceived from './contact/approveRequsetContactReceiv
 import removeContact from './contact/removeContact'
 import chatTextEmoji from './chat/chatTextEmoji'
 import typingOn from './chat/typingOn'
+import typingOff from './chat/typingOff'
 
 
 let initSockets = (io) => {
@@ -15,5 +16,6 @@ let initSockets = (io) => {
     removeContact(io);
     chatTextEmoji(io);
     typingOn(io);
+    typingOff(io);
 }
 module.exports = initSockets;

@@ -1,20 +1,20 @@
 import {pushSocketIdToArray, emitNotifyToArray,removeSocketIdFromArray} from "./../../helpers/socketHelper";
 
-let typingOn = (io) => {
+let typingOff = (io) => {
     let clients = {};
     io.on("connection",(socket)=>{
         clients = pushSocketIdToArray(clients,socket.request.user._id,socket.id);
         socket.request.user.chatGroupIds.forEach(group => {
             clients = pushSocketIdToArray(clients,group._id,socket.id);
         })
-        socket.on("user-is-typing",(data) => {
+        socket.on("user-is-not-typing",(data) => {
             if(data.groupId){
                 let response = {
                     currentGroupId: data.groupId,
                     currentUserId: socket.request.user._id,
                 }
                 if(clients[data.groupId]){
-                    emitNotifyToArray(clients,data.groupId,io, "response-user-is-typing", response);
+                    emitNotifyToArray(clients,data.groupId,io, "response-user-is-not-typing", response);
                 }
             }
             if(data.contactId){
@@ -22,7 +22,7 @@ let typingOn = (io) => {
                     currentUserId: socket.request.user._id,
                 }
                 if(clients[data.contactId]){
-                    emitNotifyToArray(clients,data.contactId,io, "response-user-is-typing", response);
+                    emitNotifyToArray(clients,data.contactId,io, "response-user-is-not-typing", response);
                 }
             }
            
@@ -39,4 +39,4 @@ let typingOn = (io) => {
     })
 }
 
-module.exports = typingOn;
+module.exports = typingOff;

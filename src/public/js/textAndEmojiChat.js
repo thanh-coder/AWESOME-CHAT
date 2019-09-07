@@ -46,6 +46,11 @@ function textAndEmojiChat(divId){
                 })
                 $(`.person[data-chat=${divId}]`).trigger("manhhung.moveConversationToTheTop");
                 socket.emit("chat-text-emoji", dataToEmit)
+                typingOff(divId);
+                let checkTyping = $(`.chat[data-chat=${divId}}`).find("div.bubble-typing-gif");
+                if(checkTyping.length){
+                    checkTyping.remove();
+                }
             }).fail(function(respone){
                 alertify.notify(response.responseText, "error",7)
             })
