@@ -40,7 +40,12 @@ function enableEmojioneArea(divId) {
       },
       click: function(){
         textAndEmojiChat(divId);
+        typingOn(divId);
+      },
+      blur: function(){
+        typingOff(divId)
       }
+
     },
   });
   $('.icon-chat').bind('click', function(event) {
