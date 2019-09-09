@@ -1,6 +1,6 @@
 import {notification}  from '../services/index';
 import {contact,message}  from '../services/index';
-import {bufferToBase64,convertTimestampToHumanTime,lastItemOfArray} from "../helpers/clientHelper"
+import {bufferToBase64ServerSide,convertTimestampToHumanTime,lastItemOfArray} from "../helpers/clientHelper"
 let getHome = async (req, res) => {
     let notifications = await notification.getNotifications(req.user._id);
     let countNotifUnread = await notification.countNotifUnread(req.user._id);
@@ -13,7 +13,7 @@ let getHome = async (req, res) => {
     let getAllConversationItems = await message.getAllConversationItems(req.user._id)
     
     let allConversationsWithMessages = await getAllConversationItems.allConversationsWithMessages;
-    
+    console.log("allConversationsWithMessages:",allConversationsWithMessages);
     return res.render('main/home/home',{
         success:req.flash("success"),
         user:req.user,
@@ -26,7 +26,7 @@ let getHome = async (req, res) => {
         countAllContactSent,
         countAllContactReceived,
         allConversationsWithMessages,
-        bufferToBase64,
+        bufferToBase64ServerSide,
         convertTimestampToHumanTime,
         lastItemOfArray
 

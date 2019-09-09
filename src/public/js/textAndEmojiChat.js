@@ -18,7 +18,7 @@ function textAndEmojiChat(divId){
                 let dataToEmit = {
                     message: data.message
                 }
-                let messageOfMe = $(`<div class="bubble me data-mess-id="${data.message._id}"></div>`)
+                let messageOfMe = $(`<div class="bubble me" data-mess-id="${data.message._id}"></div>`)
                 messageOfMe.text(data.message.text);
                 let converEmojiMessage = emojione.toImage(messageOfMe.html());
                
@@ -47,7 +47,7 @@ function textAndEmojiChat(divId){
                 $(`.person[data-chat=${divId}]`).trigger("manhhung.moveConversationToTheTop");
                 socket.emit("chat-text-emoji", dataToEmit)
                 typingOff(divId);
-                let checkTyping = $(`.chat[data-chat=${divId}}`).find("div.bubble-typing-gif");
+                let checkTyping = $(`.chat[data-chat=${divId}]`).find("div.bubble-typing-gif");
                 if(checkTyping.length){
                     checkTyping.remove();
                 }
@@ -62,11 +62,11 @@ $(document).ready(function(){
     socket.on("response-chat-text-emoji", function(response){
 
         let divId = "";
-        let messageOfYou = $(`<div class="bubble you data-mess-id="${response.message._id}"></div>`)
+        let messageOfYou = $(`<div class="bubble you" data-mess-id="${response.message._id}"></div>`)
                 messageOfYou.text(response.message.text);
                 let converEmojiMessage = emojione.toImage(messageOfYou.html());
                
-                if(response.CurrentGroupId){
+                if(response.currentGroupId){
                     let senderAvatar = `<img src="/images/users/${response.message.sender.avatar}" class="avatar-small" title="${response.message.sender.avatar}" >`;
                     messageOfYou.html(`${senderAvatar} ${converEmojiMessage}`);
                     divId = response.currentGroupId
