@@ -94,6 +94,7 @@ function gridPhotos(layoutNumber) {
   $(".show-images").unbind("click").on("click",function(){
     let href = $(this).attr("href");
     let modalImagesId = href.replace("#","");
+    let originDataImage = $(`#${modalImagesId}`).find("div.modal-body").html();
     let countRows = Math.ceil($('#imagesModal').find('div.all-images>img').length / layoutNumber);
     let layoutStr = new Array(countRows).fill(layoutNumber).join("");
     $(`#${modalImagesId}`).find('div.all-images').photosetGrid({
@@ -113,6 +114,10 @@ function gridPhotos(layoutNumber) {
         });
       }
     });
+    //bat su kien dong modal
+    $(`#${modalImagesId}`).on("hidden.bs.modal", function(){
+      $(this).find("div.modal-body").html(originDataImage);
+    })
   })
  
 }
@@ -184,6 +189,8 @@ function changeScreenChat(){
     $(this).tab("show");
     nineScrollRight(divId);
     enableEmojioneArea(divId);
+    imageChat(divId);
+    attachmentChat(divId)
 
   })
 }
@@ -197,7 +204,9 @@ function convertEmoji(){
     });
 }
 
-
+function bufferToBase64(buffer){
+  return btoa(new Uint8Array(buffer).reduce((data,byte) => data + String.fromCharCode(byte),""))
+}
 
 $(document).ready(function() {
 //convert unicode to image emotion

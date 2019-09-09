@@ -1,5 +1,5 @@
 import moment from 'moment'
-export let bufferToBase64 = (bufferFrom) => {
+export let bufferToBase64ServerSide = (bufferFrom) => {
     return Buffer.from(bufferFrom).toString("base64");
 }
 export let lastItemOfArray = (array) => {

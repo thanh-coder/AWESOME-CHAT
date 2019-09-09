@@ -49,6 +49,8 @@ let initRoutes = (app) => {
     router.get('/contact/read-more-contacts-sent',auth.checkLogin,contact.readMoreContactSent);
     router.get('/contact/read-more-contacts-receiver',auth.checkLogin,contact.readMoreContactReceiver);
     router.post("/message/add-new-text-emoji",auth.checkLogin,messageValid.checkMessageLength,message.addNewTextEmoji)
+    router.post("/message/add-new-image",auth.checkLogin,message.addNewImage)
+    router.post("/message/add-new-attachment",auth.checkLogin,message.addNewAttachment)
     return app.use("/",router)
 }
 module.exports = initRoutes;
