@@ -190,7 +190,8 @@ function changeScreenChat(){
     nineScrollRight(divId);
     enableEmojioneArea(divId);
     imageChat(divId);
-    attachmentChat(divId)
+    attachmentChat(divId);
+    videoChat(divId);
 
   })
 }
@@ -243,4 +244,7 @@ $(document).ready(function() {
   changeTypeChat();
   changeScreenChat();
   $("ul.people").find("li")[0].click();
+  $("#video-chat-group").bind("click",function(){
+    alertify.notify("khong kha dung tinh nang nay voi nhom tro chuyen","info",7);
+  })
 });
