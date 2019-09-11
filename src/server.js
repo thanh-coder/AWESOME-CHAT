@@ -18,6 +18,8 @@ import session from "./config/session";
 import initRoutes from "./routes/web";
 import initSockets from "./socket/index"
 import configSocketIo from './config/socketio';
+import event from "events";
+event.EventEmitter.defaultMaxListeners = 30;
 let app = express();
 let server = http.createServer(app);
 let io = socketio(server);
