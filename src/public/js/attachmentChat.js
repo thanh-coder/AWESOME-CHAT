@@ -24,7 +24,6 @@ function attachmentChat(divId){
             contentType: false,
             data: messageFormData,
             success: function(data){
-                console.log(data)
                 let dataToEmit = {
                     message: data.message
                 }
@@ -76,7 +75,6 @@ function attachmentChat(divId){
 
 $(document).ready(function(){
     socket.on("response-chat-attachment", function(response){
-        console.log(response)
         let divId = "";
         let messageOfYou = $(`<div class="bubble you bubble-attachment-file" data-mess-id="${response.message._id}"></div>`);
         let attachmentChat = `<a href="data:${response.message.file.contentType};base64, ${bufferToBase64(response.message.file.data.data)}" 

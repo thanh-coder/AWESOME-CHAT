@@ -13,14 +13,33 @@ function videoChat(divId){
     })
 }
 
+function playVideoStream(videoTagId, stream) {
+    let video = document.getElementById(videoTagId);
+    video.srcObject = stream;
+    video.onloadeddata = function(){
+        video.play();
+    }
+}
+
+function closeVideoStream(stream){
+    return stream.getTracks().forEach(track => track.stop())
+}
+
 $(document).ready(function(){
     socket.on("server-send-listener-is-offline", function(){
         alertify.notify("nguoi dung nay hien khong truc tuyen","error",7);
     })
     let getPerrId = "";
-    const peer = new Peer();
+    const peer = new Peer({
+        key: "peerjs",
+        host: "peerjs-server-trungquandev.herokuapp.com",
+        secure: true,
+        port: 443,
+        debug: 3
+    });
     peer.on("open",function(peerId){
         getPerrId = peerId;
+        console.log(getPerrId);
     })
 
     // step 4 of listener
@@ -36,6 +55,8 @@ $(document).ready(function(){
         }
         socket.emit("listener-emit-peer-id-to-server", dataToEmit)
     })
+
+    let timeInterval;
 //step 5 of caller
     socket.on("server-send-peer-id-of-listener-to-caller",function(response){
         console.log("step 5:",response);        
@@ -47,7 +68,6 @@ $(document).ready(function(){
             listenerPeerId: response.listenerPeerId
         }
         socket.emit("caller-request-call-to-server", dataToEmit)
-        let timeInterval;
         Swal.fire({
             title: `dang goi cho  &nbsp; <span style="color:#2ecc71">${response.listenerName}</span> &nbsp; <i class="fa fa-volume-control-phone"></i>`,
             html: `thoi gian <strong> style="color:#2ecc71 </strong> giay. <br/>
@@ -66,10 +86,12 @@ $(document).ready(function(){
                     clearInterval(timeInterval);
                     socket.emit("caller-cancel-request-call-to-server", dataToEmit)
                 })
-                Swal.showLoading();
-                timeInterval = setInterval(() => {
-                    Swal.getContent().querySelector("strong").textContent = Math.ceil(Swal.getTimerLeft()/1000);
-                },1000)
+                if(Swal.getContent().querySelector!==null){
+                    Swal.showLoading();
+                    timeInterval = setInterval(() => {
+                        Swal.getContent().querySelector("strong").textContent = Math.ceil(Swal.getTimerLeft()/1000);
+                    },1000)
+                }
             },
             onOpen: () => {
                 //step 12 of caller
@@ -87,11 +109,7 @@ $(document).ready(function(){
                     })
                 });
                 //step 13 of caller
-                socket.on("server-send-accept-call-to-caller", function(response){
-                    Swal.close();
-                    clearInterval(timeInterval);
-                    console.log("calller oki...")
-                });
+               
             },
             onClose : () => {
                 clearInterval(timeInterval);
@@ -111,7 +129,6 @@ $(document).ready(function(){
             listenerName: response.listenerName,
             listenerPeerId: response.listenerPeerId
         }
-        let timeInterval;
         Swal.fire({
             title: ` <span style="color:#2ecc71">${response.callerName}</span> &nbsp;muon tro chuyen video voi ban <i class="fa fa-volume-control-phone"></i>`,
             html: `thoi gian <strong> style="color:#2ecc71 </strong> giay. <br/>
@@ -141,23 +158,19 @@ $(document).ready(function(){
                     // step 11 of listener 
                     socket.emit("listener-accept-request-call-to-server", dataToEmit)
                 })
-                Swal.showLoading();
-                timeInterval = setInterval(() => {
-                    Swal.getContent().querySelector("strong").textContent = Math.ceil(Swal.getTimerLeft()/1000);
-                },1000)
+                if(Swal.getContent().querySelector!==null){
+                    Swal.showLoading();
+                    timeInterval = setInterval(() => {
+                        Swal.getContent().querySelector("strong").textContent = Math.ceil(Swal.getTimerLeft()/1000);
+                    },1000)
+                }
             },
             onOpen: ()=>{
                 // lang nghe steo 9 of listener
                 socket.on("server-send-cancel-request-call-to-listener", function(response){
                     Swal.close();
                     clearInterval(timeInterval);
-                }),
-                //step 14 of listener
-                socket.on("server-send-accept-call-to-listener", function(response){
-                    Swal.close();
-                    clearInterval(timeInterval);
-                    console.log("listener oki")
-                });
+                })
             },
             onClose : () => {
                 clearInterval(timeInterval);
@@ -166,6 +179,74 @@ $(document).ready(function(){
               
           })
     });
+     //step 13 of caller
+     socket.on("server-send-accept-call-to-caller", function(response){
+        Swal.close();
+        clearInterval(timeInterval);
+        let getUserMedia = (navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia).bind(navigator);
+        getUserMedia({video: true, audio: true}, function(stream) {
+            $("#streamModal").modal("show");
+            playVideoStream("local-stream", stream);
+            let call = peer.call(response.listenerPeerId, stream);
+            call.on('stream', function(remoteStream) {
+               playVideoStream("remote-stream", remoteStream);
+            });
+            $("#streamModal").on("hidden.bs.modal", function(){
+                closeVideoStream(stream);
+                Swal.fire({
+                    type:"info",
+                    title:`da ket thuc cuoc goi voi <span style="color: #2ecc71">${response.listenerName}</span> &nbsp;`,
+                    backdrop:"rgba(85,85,85,0.4)",
+                    width:"52rem",
+                    allowOutsideClick: false,
+                    confirmButtonColor: '#3085d6',
+                    confirmButtonText: 'Yes, confirm it!'
+                });
+            })
+          }, function(err) {
+            if(err.toString() === "NotAllowedError: Permission denied"){
+                alertify.notify("xin loi ban da tat quyen truy cap micro","error",7)
+            }   
+            if(err.toString() === "NotFoundError: Request device not found "){
+                alertify.notify("xin loi chung toi khong tim thay thiet bi nghe goi tren may tinh cua ban","error",7)
+            }       
+        });
+    });
 
-
-})
+     //step 14 of listener
+     socket.on("server-send-accept-call-to-listener", function(response){
+        Swal.close();
+        clearInterval(timeInterval);
+        let getUserMedia = (navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia).bind(navigator);
+        peer.on('call', function(call) {
+            console.log("call:",call)
+            getUserMedia({video: true, audio: true}, function(stream) {
+                $("#streamModal").modal("show");
+              playVideoStream("local-stream", stream);
+              call.answer(stream); // Answer the call with an A/V stream.
+              call.on('stream', function(remoteStream) {
+                playVideoStream("remote-stream", remoteStream);
+              });
+              $("#streamModal").on("hidden.bs.modal", function(){
+                    closeVideoStream(stream);
+                    Swal.fire({
+                        type:"info",
+                        title:`da ket thuc cuoc goi voi <span style="color: #2ecc71">${response.callerName}</span> &nbsp; `,
+                        backdrop:"rgba(85,85,85,0.4)",
+                        width:"52rem",
+                        allowOutsideClick: false,
+                        confirmButtonColor: '#3085d6',
+                        confirmButtonText: 'Yes, confirm it!'
+                    })
+              });
+            }, function(err) {
+                if(err.toString() === "NotAllowedError: Permission denied"){
+                    alertify.notify("xin loi ban da tat quyen truy cap micro","error",7)
+                }
+                if(err.toString() === "NotFoundError: Request device not found "){
+                    alertify.notify("xin loi chung toi khong tim thay thiet bi nghe goi tren may tinh cua ban","error",7)
+                } 
+            });
+          });
+    });
+});

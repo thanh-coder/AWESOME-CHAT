@@ -52,7 +52,6 @@ let getAllConversationItems = (currentUserId) => {
                  
                 resolve({allConversationsWithMessages})
         } catch(error){
-            console.log(error);
             reject(error)
         }
     })
@@ -169,13 +168,11 @@ let addNewImage = (sender, receiverId,messageVal, isChatGroup) => {
                     createdAt: Date.now(),
                 }
                 let newMessage =await MessageModel.model.createNew(newMessageItem);
-                console.log("mewMessage:",newMessage);
                await ContactModel.updateWhenHasNewMessage(sender.id, getUserReceiver._id);
                 resolve(newMessage)
             }
         
         } catch(error){
-            console.log(error)
             reject(error)
         }
     })
@@ -235,13 +232,11 @@ let addNewAttachment = (sender, receiverId,messageVal, isChatGroup) => {
                     createdAt: Date.now(),
                 }
                 let newMessage =await MessageModel.model.createNew(newMessageItem);
-                console.log("mewMessage:",newMessage);
-               await ContactModel.updateWhenHasNewMessage(sender.id, getUserReceiver._id);
+                await ContactModel.updateWhenHasNewMessage(sender.id, getUserReceiver._id);
                 resolve(newMessage)
             }
         
         } catch(error){
-            console.log(error)
             reject(error)
         }
     })
