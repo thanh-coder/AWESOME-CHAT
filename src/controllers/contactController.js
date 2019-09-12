@@ -23,6 +23,29 @@ let findUsersContact = async (req, res) => {
     }
 }
 
+let searchFriends = async (req, res) => {
+    let errorArr = [];
+    let validationErrors = validationResult(req);
+    if (!validationErrors.isEmpty()) {
+      let errors = Object.values(validationErrors.mapped());
+      errors.forEach(item => {
+        errorArr.push(item.msg);
+      });
+      return res.status(500).send(errorArr);
+    }
+    try {
+        let currentUserId = req.user._id;
+        let keyword = req.params.keyword;
+        let users = await contact.searchFriends(currentUserId, keyword);
+        return res.render("main/groupChat/sections/_searchFriends",{users});
+    
+    } catch(error){
+        console.log(error)
+        return res.status(500).send(error);
+
+    }
+}
+
 let addNew = async (req, res) => {
     try {
         let currentUserId = req.user._id;
@@ -115,6 +138,7 @@ let approveRequestContactReceived =  async (req,res) => {
 }
 module.exports = {
     findUsersContact,
+    searchFriends,
     addNew,
     removeRequestContactSent,
     approveRequestContactReceived,

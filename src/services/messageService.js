@@ -8,7 +8,7 @@ import _ from "lodash";
 import { resolve } from "url";
 import { rejects } from "assert";
 import fsExtra from "fs-extra"
-const LIMIT_CONVERSATION_TAKEN = 5;
+const LIMIT_CONVERSATION_TAKEN = 4;
 const LIMIT_MESSAGES_TAKEN = 12;
 
 
@@ -29,6 +29,7 @@ let getAllConversationItems = (currentUserId) => {
             })            
                 let userConversations =await Promise.all(userConversationPromise)
                 let groupConversations =await ChatGroupModel.getChatGroups(currentUserId, LIMIT_CONVERSATION_TAKEN)
+                console.log("groupConversations:",groupConversations)
                 let allConversations = userConversations.concat(groupConversations);
                 allConversations = _.sortBy(allConversations,(item) => {
                     return -item.updatedAt;

@@ -8,7 +8,9 @@ export const transValidation ={
     update_adress:"dia chi gioi han trong khoang 3-30 ki tu",
     update_phone:"so dien thoai bat dau boi so 0 va co 10-11 ki tu",
     message_text_emoji_incorrect:"tin nhan khong hop le.dam bao toi thieu 1 ki tu",
-    keyword_find_user:"keyword tim kiem khong hop le"
+    keyword_find_user:"keyword tim kiem khong hop le",
+    add_new_group_users_incorrect:"nhom tro chuyen phai co toi thieu 2 nguoi gio len",
+    add_new_group_name_incorrect:"ten cuoc tro chuyen chi nam trong khoang 5-30 ki tu"
 }
 
 export const transErrors = {

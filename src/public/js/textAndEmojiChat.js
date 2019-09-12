@@ -4,14 +4,14 @@ function textAndEmojiChat(divId){
         if(element.which === 13){
             let targetId = $(`#write-chat-${divId}`).data("chat");
             let messageVal = $(`#write-chat-${divId}`).val();
-            if(!targetId.length || ! messageVal.length ){
+            if(!targetId.length || !messageVal.length ){
                 return false;
             }
             let dataTextEmojiForSend = {
                 uid: targetId,
                 messageVal
             }
-            if($(`#write-chat${divId}`).hasClass("chat-in-group")){
+            if($(`#write-chat-${divId}`).hasClass("chat-in-group")){
                 dataTextEmojiForSend.isChatGroup = true;
             }
             $.post("/message/add-new-text-emoji", dataTextEmojiForSend, function(data){

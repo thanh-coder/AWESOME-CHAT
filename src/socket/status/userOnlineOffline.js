@@ -10,10 +10,20 @@ let userOnlineOffline = (io) => {
         }) 
 
         //step1: emit to user after login or f5 web page
-        let listUserOnline = Object.keys(clients);
-        socket.emit("server-send-list-users-online",listUserOnline);
-        //step 02: emit to all other users when has new user oline
-        socket.broadcast.emit("server-send-when-new-user-online",socket.request.user._id)
+       
+        socket.on("check-status", () => {
+            let listUserOnline = Object.keys(clients);
+            socket.emit("server-send-list-users-online",listUserOnline);
+            //step 02: emit to all other users when has new user oline
+            socket.broadcast.emit("server-send-when-new-user-online",socket.request.user._id)
+        })
+        socket.on("new-group-created",(data) => {
+            clients = pushSocketIdToArray(clients,data.groupChat._id,socket.id);
+        })
+
+        socket.on("member-received-group-chat",function(data){
+            clients = pushSocketIdToArray(clients,data.groupChatId,socket.id);
+        })
         socket.on("disconnect", () => {
             clients =  removeSocketIdFromArray(clients,socket.request.user._id, socket);
             socket.request.user.chatGroupIds.forEach(group => {

@@ -45,7 +45,7 @@ MessageSchema.statics = {
     },
     getMessagesInGroup: function(receiverId,limit){
         return this.find(
-            {"senderId":senderId}
+            {"receiverId":receiverId}
         ).sort({"createdAt":-1}).limit(limit).exec();
     }
 }
