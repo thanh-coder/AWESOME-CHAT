@@ -18,6 +18,22 @@ let findUsersContact = (currentUserId, keyword) => {
         resolve(users);
     })
 }
+
+let searchFriends = (currentUserId, keyword) => {
+    return new Promise(async (resolve, reject) => {
+        let friendIds = [];
+        let friends =  await ContactModel.getFriends(currentUserId);
+        friends.forEach((friend) => {
+            friendIds.push(friend.userId);
+            friendIds.push(friend.contactId);
+        })
+        friendIds = _.uniqBy(friendIds);
+        friendIds = friendIds.filter(userId => userId != currentUserId)
+        let users = await UserModel.findAllToAddGroupChat(friendIds, keyword);
+        resolve(users);
+    })
+}
+
 let addNew = (currentUserId, contactId) => {
     return new Promise(async (resolve, reject) => {
       let contatcExits = await ContactModel.checkExists(currentUserId, contactId);
@@ -239,6 +255,7 @@ let removeContact = (currentUserId, skipNumberContacts) => {
 
 module.exports = {
     findUsersContact,
+    searchFriends,
     addNew,
     removeRequestContactSent,
     removeRequestContactReceived,

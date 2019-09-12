@@ -1,5 +1,5 @@
-function callFindUsers(event){
-    console.log(event.target)
+function callFindUsers(element){
+    if(element.which === 13 || element.type === "click"){
     let keyword = $("#input-find-users-contact").val();
     console.log("keyword"+keyword)
     let regexKeyword = new RegExp(/^[\s0-9a-zA-Z_ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ ]+$/);
@@ -13,9 +13,9 @@ function callFindUsers(event){
         addContact();
         removeRequestContactSent();
     })
-
+    }
 }
 $(document).ready(function(){
     $("#btn-find-users-contact").bind("click",callFindUsers);
-    // $("#input-find-users-contact").bind("keypress",callFindUsers);
+    $("#input-find-users-contact").bind("keypress",callFindUsers);
 })

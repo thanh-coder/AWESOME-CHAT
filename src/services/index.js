@@ -3,9 +3,10 @@ import userService from './userService';
 import contactService from './contactService';
 import notificationService from './notificationService';
 import getAllConversationItems from './messageService';
-
+import groupChatService from './groupChatService';
 export const auth = authService;
 export const user = userService;
 export const contact = contactService;
 export const notification = notificationService;
 export const message = getAllConversationItems;
+export const groupChat = groupChatService;

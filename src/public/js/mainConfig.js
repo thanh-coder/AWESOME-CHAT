@@ -233,11 +233,7 @@ $(document).ready(function() {
   // Tham số chỉ được phép trong khoảng từ 1 đến 5
   gridPhotos(5);
 
-  // Thêm người dùng vào danh sách liệt kê trước khi tạo nhóm trò chuyện
-  addFriendsToGroup();
 
-  // Action hủy việc tạo nhóm trò chuyện
-  cancelCreateGroup();
   //hien thi thong bao login vao page
   flashMasterNotify();
   //thay doi cuoc tro chuyen

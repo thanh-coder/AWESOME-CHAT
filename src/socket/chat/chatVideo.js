@@ -33,6 +33,15 @@ let chatTextEmoji = (io) => {
             }
         })
 
+        socket.on("new-group-created",(data) => {
+            clients = pushSocketIdToArray(clients,data.groupChat._id,socket.id);
+        })
+
+        socket.on("member-received-group-chat",function(data){
+            clients = pushSocketIdToArray(clients,data.groupChatId,socket.id);
+
+        })
+
         socket.on("caller-request-call-to-server", (data) => {
             let response = {
                 callerId: data.callerId,

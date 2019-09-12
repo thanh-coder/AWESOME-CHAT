@@ -1,7 +1,6 @@
 function typingOn(divId){
     let targetId = $(`#write-chat-${divId}`).data("chat");
-    console.log(divId);
-    if($(`#write-chat${divId}`).hasClass("chat-in-group")){
+    if($(`#write-chat-${divId}`).hasClass("chat-in-group")){
         socket.emit("user-is-typing",{groupId:targetId})
     } else {
         socket.emit("user-is-typing",{contactId:targetId})
@@ -10,7 +9,7 @@ function typingOn(divId){
 
 function typingOff(divId){
     let targetId = $(`#write-chat-${divId}`).data("chat");
-    if($(`#write-chat${divId}`).hasClass("chat-in-group")){
+    if($(`#write-chat-${divId}`).hasClass("chat-in-group")){
         socket.emit("user-is-not-typing",{groupId:targetId})
     } else {
         socket.emit("user-is-not-typing",{contactId:targetId})
@@ -42,14 +41,13 @@ $(document).ready(function(){
         })
 
     socket.on("response-user-is-not-typing",function(response){
-        if(response.CurrentGroupId){
+        if(response.currentGroupId){
             if(response.currentUserId !== $("#dropdown-navbar-user").data("uid")){
-                 $(`.chat[data-chat=${response.CurrentGroupId}]`).find("div.bubble-typing-gif").remove();
+                 $(`.chat[data-chat=${response.currentGroupId}]`).find("div.bubble-typing-gif").remove();
                 nineScrollRight(response.currentGroupId);
             } 
         }else {
                 $(`.chat[data-chat=${response.currentUserId}]`).find("div.bubble-typing-gif").remove();
-            
                 nineScrollRight(response.currentUserId);
         }
     })
