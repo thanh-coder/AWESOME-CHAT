@@ -1,6 +1,4 @@
-function bufferToBase64(buffer){
-    return btoa(new Uint8Array(buffer).reduce((data,byte) => data + String.fromCharCode(byte),""))
-}
+
 
 function imageChat(divId){
     $(`#image-chat-${divId}`).unbind("change").on("change", function(){

@@ -11,7 +11,6 @@ let addNewContact = (io) => {
                 avatar: socket.request.user.avatar,
                 address: socket.request.user.address != null ? socket.request.user.address : ""
             }
-            console.log(socket.request.user)
             if(clients[data.contactId]){
                 emitNotifyToArray(clients,data.contactId,io, "response-add-new-contact", currentUser);
             }

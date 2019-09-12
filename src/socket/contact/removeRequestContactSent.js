@@ -1,4 +1,4 @@
-import {pushSocketIdToArray, emitNotifyToArray,removeSocketIdFromArray} from "./../../helpers/socketHelper";
+import {pushSocketIdToArray, emitNotifyToArray,removeSocketIdFromArray} from "../../helpers/socketHelper";
 
 let removeRequestContactSent = (io) => {
     let clients = {};
